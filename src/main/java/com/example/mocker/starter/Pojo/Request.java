@@ -1,28 +1,20 @@
 package com.example.mocker.starter.Pojo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
+//import javax.annotation.Nonnull;
+
+@Data
+@NoArgsConstructor
 public class Request {
 
-  @JsonProperty(required = true)
+//  @JsonProperty(required = true)
+  @NonNull
   private String method;
-
-  @JsonProperty(required = true)
+//  @JsonProperty(required = true)
+ @NonNull
   private String path;
-
-  public String getMethod() {
-    return method;
-  }
-
-  public void setMethod(String method) {
-    this.method = method;
-  }
-
-  public String getPath() {
-    return path;
-  }
-
-  public void setPath(String path) {
-    this.path = path;
-  }
 }

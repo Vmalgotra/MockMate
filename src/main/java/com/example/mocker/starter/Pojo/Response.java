@@ -1,38 +1,25 @@
 package com.example.mocker.starter.Pojo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import java.util.Map;
 
+@Data
+@NoArgsConstructor
 public class Response {
+
+  @JsonProperty(required = true)
+  @NonNull
   private JsonNode body;
-
-  public Map<String, String> getHeaders() {
-    return headers;
-  }
-
-  public Integer getStatus() {
-    return status;
-  }
-
-  public void setStatus(Integer status) {
-    this.status = status;
-  }
-
-
-  public void setHeaders(Map headers) {
-    this.headers = headers;
-  }
-
+//  @JsonProperty(required = true)
+  @NonNull
   private Integer status;
-
+//  @JsonProperty(required = true)
+  @NonNull
   private Map<String,String> headers;
 
-  public JsonNode getBody() {
-    return body;
-  }
-
-  public void setBody(JsonNode body) {
-    this.body = body;
-  }
 }

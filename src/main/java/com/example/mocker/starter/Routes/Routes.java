@@ -3,9 +3,8 @@ package com.example.mocker.starter.Routes;
 import com.example.mocker.starter.MainApplication;
 import com.example.mocker.starter.MainVerticle;
 import com.example.mocker.starter.Pojo.CreateRoute;
+import com.example.mocker.starter.Controller.HealthCheckHandler;
 import com.example.mocker.starter.Pojo.Validator;
-import com.example.mocker.starter.Service.HealthCheckHandler;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.vertx.core.Vertx;
@@ -51,27 +50,9 @@ public class Routes {
 
     readMappingsFromFile(vertx, router);
 
-//    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
-
     router.post("/dynamic-routes").handler(routingContext -> {
       JsonObject requestBody = routingContext.getBodyAsJson();
-      ObjectMapper objectMapper = new ObjectMapper();
-      SimpleModule module = new SimpleModule();
-      try {
-        module.addDeserializer(CreateRoute.class, new Validator());
-        objectMapper.registerModule(module);
-      } catch (Exception e) {
-        logger.info("Bad Request for route /dynamic-routes {}", e.getMessage());
-        routingContext.failure();
-      }
-
-      CreateRoute createRoute = null;
-      try {
-        createRoute = objectMapper.convertValue(requestBody.getMap(), CreateRoute.class);
-      } catch (IllegalArgumentException e) {
-        logger.info("Bad Request for route /dynamic-routes {}", e.getMessage());
-        routingContext.failure();
-      }
+      CreateRoute createRoute = getCreateRoute(routingContext, requestBody);
       addRoute(router, createRoute);
       writeRouteToFile(vertx, createRoute);
       MainApplication.restart(vertx);
@@ -79,6 +60,21 @@ public class Routes {
     });
 
     return router;
+  }
+
+  private static CreateRoute getCreateRoute(RoutingContext routingContext, JsonObject requestBody) {
+    SimpleModule module = new SimpleModule();
+    module.addDeserializer(CreateRoute.class, new Validator());
+    objectMapper.registerModule(module);
+    CreateRoute createRoute = null;
+    try {
+      createRoute = objectMapper.convertValue(requestBody.getMap(), CreateRoute.class);
+    } catch (Exception e) {
+      logger.info("Bad Request for route /dynamic-routes {}", e.getMessage());
+      routingContext.fail(e);
+      routingContext.failure();
+    }
+    return createRoute;
   }
 
   private static void addRoute(Router router, CreateRoute createRoute) {
@@ -120,9 +116,10 @@ public class Routes {
   }
 
   private static void handleException(RoutingContext routingContext) {
-      routingContext.response()
+    String errorMessage = "Invalid Request Body";
+    routingContext.response()
         .setStatusCode(400)
-        .end("Bad Request: Invalid JSON body {}");
+        .end(errorMessage);
   }
 
 }

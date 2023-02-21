@@ -22,4 +22,6 @@ public class Response {
   @NonNull
   private Map<String,String> headers;
 
+  private Long latency=0L;
+
 }

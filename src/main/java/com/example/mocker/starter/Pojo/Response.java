@@ -12,16 +12,15 @@ import java.util.Map;
 @NoArgsConstructor
 public class Response {
 
-  @JsonProperty(required = true)
-  @NonNull
-  private JsonNode body;
+  private JsonNode body = null;
 //  @JsonProperty(required = true)
-  @NonNull
-  private Integer status;
+  private Integer status = 200;
 //  @JsonProperty(required = true)
   @NonNull
   private Map<String,String> headers;
 
   private Long latency=0L;
+
+  private String transformer;
 
 }

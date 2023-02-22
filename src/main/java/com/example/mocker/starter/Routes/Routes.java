@@ -1,6 +1,8 @@
 package com.example.mocker.starter.Routes;
 
 import com.example.mocker.starter.Controller.StaticMockController;
+import com.example.mocker.starter.Controller.TransformerMap;
+import com.example.mocker.starter.Controller.TransformerMockController;
 import com.example.mocker.starter.MainApplication;
 import com.example.mocker.starter.MainVerticle;
 import com.example.mocker.starter.Pojo.CreateRoute;
@@ -55,6 +57,7 @@ public class Routes {
     });
 
     readMappingsFromFile(vertx, router);
+    TransformerMap.loadMap();
 
     router.post("/dynamic-routes").handler(routingContext -> {
       JsonObject requestBody = routingContext.getBodyAsJson();
@@ -84,16 +87,8 @@ public class Routes {
   }
 
   private static void addRoute(Router router, CreateRoute createRoute) {
-//    Route route =
-      router.route(HttpMethod.valueOf(createRoute.getRequest().getMethod()), createRoute.getRequest().getPath()).handler(new StaticMockController(vertx,createRoute));
-//    route.handler(routingContext -> {
-//      for (Map.Entry<String, String> header : createRoute.getResponse().getHeaders().entrySet()) {
-//        routingContext.response().putHeader(header.getKey(), header.getValue());
-//      }
-//      route.handler(new StaticMockController());
-//      routingContext.response().putHeader("content-type", "application/json");
-//      routingContext.response().setStatusCode(createRoute.getResponse().getStatus()).end(createRoute.getResponse().getBody().toString());
-//    });
+      router.route(HttpMethod.valueOf(createRoute.getRequest().getMethod()), createRoute.getRequest().getPath())
+        .handler(new TransformerMockController(vertx,createRoute));
   }
   private static void writeRouteToFile(Vertx vertx, CreateRoute createRoute) {
     String filename = createRoute.getRequest().getPath().replace("/", "_").substring(1).concat("_" + createRoute.getRequest().getMethod()) + ".json";

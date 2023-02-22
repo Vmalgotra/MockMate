@@ -32,6 +32,7 @@ public class Validator extends StdDeserializer<CreateRoute> {
     JsonNode headers =  responseNode.get("headers");
     JsonNode path =  requestNode.get("path");
     JsonNode method =  requestNode.get("method");
+    JsonNode transformer =  responseNode.get("transformer");
 
 
     if (requestNode == null || requestNode.isNull()) {
@@ -42,23 +43,19 @@ public class Validator extends StdDeserializer<CreateRoute> {
       logger.info("Missing 'response' field");
       throw new JsonParseException(jsonParser, "Missing 'response' field");
     }
-    if (status == null || status.isNull()) {
-      logger.info("Missing 'status' field");
-      throw new JsonParseException(jsonParser, "Missing 'status' field");
-    }
-    if (status == null || status.isNull()) {
-      logger.info("Missing 'status' field");
-      throw new JsonParseException(jsonParser, "Missing 'status' field");
-    }
+//    if (status == null ) {
+//      logger.info("Missing 'status' field");
+//      throw new JsonParseException(jsonParser, "Missing 'status' field");
+//    }
 
     if (headers == null || headers.isNull()) {
       logger.info("Missing 'headers' field");
       throw new JsonParseException(jsonParser, "Missing 'headers' field");
     }
 
-    if (body == null || body.isNull()) {
-      logger.info("Missing 'body' field");
-      throw new JsonParseException(jsonParser, "Missing 'body' field");
+    if (body == null && transformer == null) {
+      logger.info("Missing 'body' or 'transformer' field");
+      throw new JsonParseException(jsonParser, "Missing 'body' or 'transformer' field");
     }
 
     if (path == null || path.isNull()) {

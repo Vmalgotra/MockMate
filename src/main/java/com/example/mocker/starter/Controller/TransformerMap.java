@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import com.example.mocker.starter.Controller.Transformers.*;
 import lombok.SneakyThrows;
 
 public class TransformerMap {
@@ -29,7 +28,7 @@ public class TransformerMap {
     // Get the package directory as a resource
     String packageDirectory = packageName.replace('.', '/');
     URL packageUrl = classLoader.getResource(packageDirectory);
-    String a = packageUrl.getFile();
+
     // Get a list of all files in the package directory
     File[] packageFiles = new File(packageUrl.getFile()).listFiles();
 

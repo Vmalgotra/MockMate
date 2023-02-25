@@ -1,21 +1,11 @@
 package com.example.mocker.starter.Routes;
 
-import com.example.mocker.starter.Controller.StaticMockController;
-import com.example.mocker.starter.Controller.TransformerMap;
-import com.example.mocker.starter.Controller.TransformerMockController;
-import com.example.mocker.starter.MainApplication;
+import com.example.mocker.starter.Controller.*;
 import com.example.mocker.starter.MainVerticle;
 import com.example.mocker.starter.Pojo.CreateRoute;
-import com.example.mocker.starter.Controller.HealthCheckHandler;
-import com.example.mocker.starter.Pojo.Validator;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.vertx.core.Vertx;
-import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.Json;
-import io.vertx.core.json.JsonObject;
-import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
@@ -24,27 +14,32 @@ import org.apache.logging.log4j.Logger;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Map;
 
 public class Routes {
 
   private static final Logger logger = LogManager.getLogger(MainVerticle.class);
-  private static final ObjectMapper objectMapper = new ObjectMapper();
   private static final String path = "/src/main/java/com/example/mocker/starter/Routes/route/";
-
+  public static Router router;
   private static Vertx vertx;
+
+  private static void setRouter(Vertx vertx){
+    Routes.vertx = vertx;
+
+    router = Router.router(vertx);
+
+    createRoutesFromFiles(vertx, router);
+
+    TransformerMap.loadMap();
+
+  }
 
   public static Router createRouter(Vertx vertx) {
 
-    Routes.vertx = vertx;
-
-    Router router = Router.router(vertx);
-
-    HealthCheckHandler healthCheckHandler = new HealthCheckHandler();
-
-    router.get("/healthcheck").handler(healthCheckHandler);
+    setRouter(vertx);
 
     router.route().handler(BodyHandler.create());
+
+    router.get("/healthcheck").handler(HealthCheckHandler::handle);
 
     router.route().failureHandler(Routes::handleException);
 
@@ -56,52 +51,20 @@ public class Routes {
       routingContext.next();
     });
 
-    readMappingsFromFile(vertx, router);
-    TransformerMap.loadMap();
+    router.post("/dynamic-routes").handler(DynamicRouteHandler::handle);
 
-    router.post("/dynamic-routes").handler(routingContext -> {
-      JsonObject requestBody = routingContext.getBodyAsJson();
-      CreateRoute createRoute = validateRequest(routingContext, requestBody);
-      addRoute(router, createRoute);
-      writeRouteToFile(vertx, createRoute);
-      MainApplication.restart(vertx);
-      routingContext.response().putHeader("content-type", "application/json").setStatusCode(201).end(Json.encode(requestBody.getMap()));
-    });
     return router;
   }
 
-  private static CreateRoute validateRequest(RoutingContext routingContext, JsonObject requestBody) {
-    SimpleModule module = new SimpleModule();
-    module.addDeserializer(CreateRoute.class, new Validator());
-    objectMapper.registerModule(module);
-    CreateRoute createRoute = null;
-    try {
-      logger.info("Creating object");
-      createRoute = objectMapper.convertValue(requestBody.getMap(), CreateRoute.class);
-    } catch (Exception e) {
-      logger.info("Bad Request for route /dynamic-routes {}", e.getMessage());
-      routingContext.fail(e);
-      routingContext.failure();
-    }
-    return createRoute;
-  }
-
-  private static void addRoute(Router router, CreateRoute createRoute) {
+   public static void addRoute(Router router, CreateRoute createRoute) {
       router.route(HttpMethod.valueOf(createRoute.getRequest().getMethod()), createRoute.getRequest().getPath())
         .handler(new TransformerMockController(vertx,createRoute));
   }
-  private static void writeRouteToFile(Vertx vertx, CreateRoute createRoute) {
-    String filename = createRoute.getRequest().getPath().replace("/", "_").substring(1).concat("_" + createRoute.getRequest().getMethod()) + ".json";
-    String userDir = System.getProperty("user.dir");
-    Path filePath = Paths.get(userDir + path + filename);
-    vertx.fileSystem().writeFile(String.valueOf(filePath), Buffer.buffer(Json.encode(createRoute)), result -> {
-      logger.info(result.succeeded() ? "Route written to file: " + filename : "Failed to write route to file: " + filename);
-    });
-  }
-  private static void readMappingsFromFile(Vertx vertx, Router router) {
-    String userDir = System.getProperty("user.dir");
+
+  private static void createRoutesFromFiles(Vertx vertx, Router router) {
+    String userDir = Paths.get("").toAbsolutePath().toString();
     Path Dirpath = Paths.get(userDir + path);
-    vertx.fileSystem().readDir(String.valueOf(Dirpath)).onSuccess(files -> {
+    vertx.fileSystem().readDir(Dirpath.toString()).onSuccess(files -> {
       for (String file : files) {
         vertx.fileSystem().readFile(file, result -> {
           if (result.succeeded()) {
@@ -115,6 +78,7 @@ public class Routes {
       }
     });
   }
+
   private static void handleException(RoutingContext routingContext) {
     String errorMessage = "Invalid Request Body";
     routingContext.response()

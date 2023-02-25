@@ -4,10 +4,9 @@ package com.example.mocker.starter.Controller;
 import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
 
-public class HealthCheckHandler implements Handler<RoutingContext> {
+public class HealthCheckHandler{
 
-  @Override
-  public void handle(RoutingContext routingContext) {
+  public static void handle(RoutingContext routingContext) {
     routingContext.response().end("Hello, world!");
   }
 }

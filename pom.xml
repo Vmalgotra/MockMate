@@ -20,7 +20,7 @@
         <junit-jupiter.version>5.9.1</junit-jupiter.version>
 
         <main.verticle>com.example.mocker.starter.MainVerticle</main.verticle>
-        <launcher.class>io.vertx.core.Launcher</launcher.class>
+       <launcher.class>com.example.mocker.starter.MainApplication</launcher.class>
         <maven.compiler.source>19</maven.compiler.source>
         <maven.compiler.target>19</maven.compiler.target>
     </properties>
@@ -91,6 +91,11 @@
       <artifactId>lombok</artifactId>
       <version>RELEASE</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.github.classgraph</groupId>
+      <artifactId>classgraph</artifactId>
+      <version>4.8.154</version>
     </dependency>
 
   </dependencies>

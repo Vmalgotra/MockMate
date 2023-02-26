@@ -23,4 +23,6 @@ public class Response {
 
   private String transformer;
 
+  private String expression = null;
+
 }

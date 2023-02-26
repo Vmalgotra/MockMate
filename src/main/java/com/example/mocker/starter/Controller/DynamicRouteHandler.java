@@ -25,7 +25,6 @@ public class DynamicRouteHandler {
   private static final ObjectMapper objectMapper = new ObjectMapper();
 
   private static final SimpleModule module = new SimpleModule();
-
   private static final Validator validator =  new Validator();
   private static final String path = "/src/main/java/com/example/mocker/starter/Routes/route/";
   private static final Logger logger = LogManager.getLogger(DynamicRouteHandler.class);

@@ -30,7 +30,6 @@ public class Routes {
     createRoutesFromFiles(vertx, router);
 
     TransformerMap.loadMap();
-
   }
 
   public static Router createRouter(Vertx vertx) {

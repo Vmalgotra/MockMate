@@ -1,7 +1,5 @@
 package com.example.mocker.starter.Controller;
 
-
-import io.vertx.core.Handler;
 import io.vertx.ext.web.RoutingContext;
 
 public class HealthCheckHandler{

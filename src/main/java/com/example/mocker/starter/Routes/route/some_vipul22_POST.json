@@ -1,1 +1,0 @@
-{"request":{"method":"POST","path":"/some/vipul22"},"response":{"body":null,"status":200,"headers":{"Content-Type":"application/json","ap":"vipul"},"latency":1000,"transformer":"TransformerMockControllers4"}}

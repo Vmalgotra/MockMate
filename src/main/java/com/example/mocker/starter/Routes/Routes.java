@@ -21,7 +21,6 @@ public class Routes {
   private static final String path = "/src/main/java/com/example/mocker/starter/Routes/route/";
   public static Router router;
   private static Vertx vertx;
-
   private static void setRouter(Vertx vertx){
     Routes.vertx = vertx;
 
@@ -38,7 +37,7 @@ public class Routes {
 
     router.route().handler(BodyHandler.create());
 
-    router.get("/healthcheck").handler(HealthCheckHandler::handle);
+    router.get("/healthcheck").handler(routingContext -> routingContext.response().end("Hello, world!"));
 
     router.route().failureHandler(Routes::handleException);
 

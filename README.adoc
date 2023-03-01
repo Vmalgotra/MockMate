@@ -21,7 +21,7 @@ curl --location --request POST 'http://localhost:8888/dynamic-routes'
 "path": "/some/path"
 },
 "response": {
-"body": { "status": "success"},
+"body": {"status": "success"},
 "headers": {
 "Content-Type": "application/json"
 },
@@ -31,6 +31,8 @@ curl --location --request POST 'http://localhost:8888/dynamic-routes'
 }'
 ```
 
-Make sure to replace the `http://localhost:8888` with the appropriate URL for your project.
+Make the below curl to call the dynamic route.
 
-
+```
+curl --location --request POST 'http://localhost:8888/some/path'
+```

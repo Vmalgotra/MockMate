@@ -1,32 +1,36 @@
-= Starter
+# README
 
-image:https://img.shields.io/badge/vert.x-4.3.8-purple.svg[link="https://vertx.io"]
+## Description
 
-This application was generated using http://start.vertx.io
+This project is an example of using cURL to create a dynamic route.
 
-== Building
+## Installation
 
-To launch your tests:
+This project does not require any installation. However, you need to have cURL installed in your system.
+
+## Usage
+
+To create a dynamic route, you can use the following cURL command:
+
 ```
-./mvnw clean test
+curl --location --request POST 'http://localhost:8888/dynamic-routes'
+--header 'Content-Type: application/json'
+--data-raw '{
+"request": {
+"method": "POST",
+"path": "/some/path"
+},
+"response": {
+"body": { "status": "success"},
+"headers": {
+"Content-Type": "application/json"
+},
+"status": 200,
+"latency": 100
+}
+}'
 ```
 
-To package your application:
-```
-./mvnw clean package
-```
-
-To run your application:
-```
-./mvnw clean compile exec:java
-```
-
-== Help
-
-* https://vertx.io/docs/[Vert.x Documentation]
-* https://stackoverflow.com/questions/tagged/vert.x?sort=newest&pageSize=15[Vert.x Stack Overflow]
-* https://groups.google.com/forum/?fromgroups#!forum/vertx[Vert.x User Group]
-* https://discord.gg/6ry7aqPWXy[Vert.x Discord]
-* https://gitter.im/eclipse-vertx/vertx-users[Vert.x Gitter]
+Make sure to replace the `http://localhost:8888` with the appropriate URL for your project.
 
 

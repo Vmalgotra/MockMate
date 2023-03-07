@@ -51,6 +51,8 @@ public class Routes {
 
     router.post("/dynamic-routes").handler(DynamicRouteHandler::handle);
 
+    router.get("/getkeys").handler(GetKeysController::handle);
+
     return router;
   }
 

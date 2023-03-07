@@ -8,12 +8,9 @@ import org.apache.logging.log4j.Logger;
 public class MainApplication {
 
   private static final Logger logger = LogManager.getLogger(MainApplication.class);
-
-
   public static void main(String[] args) {
     deployVerticles();
   }
-
   public static void restart (Vertx vertxObject) {
     vertxObject.close(event -> {
       if (event.succeeded()) {
@@ -23,9 +20,7 @@ public class MainApplication {
         System.out.println("Vert.x stop failed");
       }
     });
-
   }
-
   private static void deployVerticles() {
     Vertx vertx = Vertx.vertx();
     vertx.deployVerticle(MainVerticle.class.getName(), new DeploymentOptions().setInstances(4), ar -> {

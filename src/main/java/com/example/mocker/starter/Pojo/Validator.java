@@ -19,7 +19,6 @@ public class Validator extends StdDeserializer<CreateRoute> {
     super(CreateRoute.class);
   }
 
-
   @Override
   public CreateRoute deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
     ObjectCodec codec = jsonParser.getCodec();

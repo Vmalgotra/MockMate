@@ -23,7 +23,6 @@ import static com.example.mocker.starter.Routes.Routes.addRoute;
 public class DynamicRouteHandler {
 
   private static final ObjectMapper objectMapper = new ObjectMapper();
-
   private static final SimpleModule module = new SimpleModule();
   private static final Validator validator =  new Validator();
   private static final String path = "/src/main/java/com/example/mocker/starter/Routes/route/";
@@ -37,9 +36,7 @@ public class DynamicRouteHandler {
     writeRouteToFile(vertx, createRoute);
     MainApplication.restart(vertx);
     routingContext.response().putHeader("content-type", "application/json").setStatusCode(201).end(Json.encode(requestBody.getMap()));
-
   }
-
 
   private static CreateRoute validateRequest(RoutingContext routingContext, JsonObject requestBody) {
     module.addDeserializer(CreateRoute.class, validator);
@@ -63,6 +60,5 @@ public class DynamicRouteHandler {
       logger.info(result.succeeded() ? "Route written to file: " + filename : "Failed to write route to file: " + filename);
     });
   }
-
 
 }

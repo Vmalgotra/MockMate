@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 
+import java.util.List;
+
 public interface Transformer {
   /**
    * Transforms the body of the provided RoutingContext into a JSON object and
@@ -12,5 +14,14 @@ public interface Transformer {
    * @param routingContext the RoutingContext object containing the body to be transformed
    * @return a JSON string representing the transformed object
    */
+
+//  List<String> transformerKeys = null;
+//
+//  default List<String> getTransformerKeys() {
+//    return transformerKeys;
+//  }
+
   JsonObject transform(RoutingContext routingContext);
+
+
 }
